@@ -38,27 +38,37 @@ def get_current_user(request: Request) -> CurrentUser:
     """Resolve the authenticated user from the Authorization header."""
     header = request.headers.get("Authorization")
     if not header or not header.startswith("Bearer "):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+        )
 
     token = header.removeprefix("Bearer ")
     try:
         claims = decode_access_token(token)
     except jwt.PyJWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
 
     username = claims.get("sub")
     if not username:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
 
     conn = get_connection()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, username, role FROM users WHERE username = %s", (username,))
+            cur.execute(
+                "SELECT id, username, role FROM users WHERE username = %s", (username,)
+            )
             row = cur.fetchone()
     finally:
         conn.close()
 
     if row is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
 
     return CurrentUser(id=row[0], username=row[1], role=claims.get("role", row[2]))
