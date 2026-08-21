@@ -3,6 +3,9 @@
 up:
 	docker compose up -d
 
+db:
+	docker compose up db -d
+
 down:
 	docker compose down -v
 
