@@ -44,7 +44,11 @@ async def test_create_user_as_admin(client_admin: AsyncClient) -> None:
     """An administrator can create a new user."""
     response = await client_admin.post(
         "/users",
-        json={"username": "erin", "email": "erin@example.com", "password": "a-fresh-password"},
+        json={
+            "username": "erin",
+            "email": "erin@example.com",
+            "password": "a-fresh-password",
+        },
     )
     assert response.status_code == 201
     assert response.json()["username"] == "erin"
@@ -60,7 +64,11 @@ async def test_create_user_duplicate_username(client_admin: AsyncClient) -> None
     """Creating a user with an existing username is rejected."""
     response = await client_admin.post(
         "/users",
-        json={"username": "alice", "email": "alice2@example.com", "password": "another-password"},
+        json={
+            "username": "alice",
+            "email": "alice2@example.com",
+            "password": "another-password",
+        },
     )
     assert response.status_code == 409
 

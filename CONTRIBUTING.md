@@ -40,6 +40,7 @@ A `Makefile` wraps the common commands:
 
 ```sh
 make up         # start the stack
+make db         # start the database only
 make down       # stop the stack
 make tests      # run the test suite
 make lint       # run the linter

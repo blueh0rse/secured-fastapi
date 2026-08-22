@@ -1,13 +1,16 @@
-.PHONY: up down tests lint
+.PHONY: up down tests lint db
 
 up:
 	docker compose up -d
+
+db:
+	docker compose up db -d
 
 down:
 	docker compose down -v
 
 tests:
-	uv run --no-project python -m pytest
+	uv run python -m pytest
 
 lint:
-	uv run --no-project flake8 app tests
+	uv run flake8 app tests

@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - run: make lint
+
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    needs: lint
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - run: make db
+      - run: |
+          until docker compose exec db pg_isready -U postgres; do
+            echo "Waiting for the database to be ready..."
+            sleep 5
+          done
+      - run: make tests
+
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    needs: test
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: make up
+      - run: |
+          # Wait for the application to be ready
+          until curl -sf localhost:8000/health; do
+            echo "Waiting for the application to be ready..."
+            sleep 5
+          done

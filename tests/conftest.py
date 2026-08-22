@@ -35,12 +35,24 @@ def db() -> None:
             cur.execute(
                 "INSERT INTO users (username, email, hashed_password, role, is_active) "
                 "VALUES (%s, %s, %s, %s, %s)",
-                ("admin", "admin@example.com", _hash(SEED_PASSWORDS["admin"]), "admin", True),
+                (
+                    "admin",
+                    "admin@example.com",
+                    _hash(SEED_PASSWORDS["admin"]),
+                    "admin",
+                    True,
+                ),
             )
             cur.execute(
                 "INSERT INTO users (username, email, hashed_password, role, is_active) "
                 "VALUES (%s, %s, %s, %s, %s)",
-                ("alice", "alice@example.com", _hash(SEED_PASSWORDS["alice"]), "user", True),
+                (
+                    "alice",
+                    "alice@example.com",
+                    _hash(SEED_PASSWORDS["alice"]),
+                    "user",
+                    True,
+                ),
             )
             cur.execute(
                 "INSERT INTO users (username, email, hashed_password, role, is_active) "
@@ -50,16 +62,29 @@ def db() -> None:
             cur.execute(
                 "INSERT INTO users (username, email, hashed_password, role, is_active) "
                 "VALUES (%s, %s, %s, %s, %s)",
-                ("carol", "carol@example.com", _hash(SEED_PASSWORDS["carol"]), "user", False),
+                (
+                    "carol",
+                    "carol@example.com",
+                    _hash(SEED_PASSWORDS["carol"]),
+                    "user",
+                    False,
+                ),
             )
             cur.execute(
                 "INSERT INTO users (username, email, hashed_password, role, is_active) "
                 "VALUES (%s, %s, %s, %s, %s)",
-                ("dave", "dave@example.com", _hash(SEED_PASSWORDS["dave"]), "admin", True),
+                (
+                    "dave",
+                    "dave@example.com",
+                    _hash(SEED_PASSWORDS["dave"]),
+                    "admin",
+                    True,
+                ),
             )
             cur.execute(
                 "INSERT INTO audit_logs (user_id, action, ip_address) VALUES "
-                "(1, 'login', '10.0.0.11'), (2, 'login', '10.0.0.24'), (3, 'login', '10.0.0.31')"
+                "(1, 'login', '10.0.0.11'), (2, 'login', '10.0.0.24'), "
+                "(3, 'login', '10.0.0.31')"
             )
         conn.commit()
     finally:
