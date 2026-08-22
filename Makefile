@@ -10,7 +10,7 @@ down:
 	docker compose down -v
 
 tests:
-	uv run --no-project python -m pytest
+	uv run python -m pytest
 
 lint:
-	uv run --no-project flake8 app tests
+	uv run flake8 app tests

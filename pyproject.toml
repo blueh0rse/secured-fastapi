@@ -1,3 +1,20 @@
+[project]
+name = "secured-fastapi"
+version = "1.0.0"
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi==0.63.0",
+    "uvicorn[standard]==0.13.4",
+    "uvloop==0.21.0",
+    "psycopg2-binary==2.8.6",
+    "PyJWT==1.7.1",
+    "pytest==7.4.4",
+    "pytest-asyncio==0.21.1",
+    "pytest-cov==4.1.0",
+    "httpx==0.25.2",
+    "flake8==7.0.0",
+]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
