@@ -33,6 +33,18 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     needs: lint
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_URL: ${{ secrets.DB_URL }}
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+      JWT_ALGORITHM: ${{ secrets.JWT_ALGORITHM }}
+      SEED_PASSWORD_ADMIN: ${{ secrets.SEED_PASSWORD_ADMIN }}
+      SEED_PASSWORD_ALICE: ${{ secrets.SEED_PASSWORD_ALICE }}
+      SEED_PASSWORD_BOB: ${{ secrets.SEED_PASSWORD_BOB }}
+      SEED_PASSWORD_CAROL: ${{ secrets.SEED_PASSWORD_CAROL }}
+      SEED_PASSWORD_DAVE: ${{ secrets.SEED_PASSWORD_DAVE }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -48,6 +60,18 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     needs: test
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_URL: ${{ secrets.DB_URL }}
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+      JWT_ALGORITHM: ${{ secrets.JWT_ALGORITHM }}
+      SEED_PASSWORD_ADMIN: ${{ secrets.SEED_PASSWORD_ADMIN }}
+      SEED_PASSWORD_ALICE: ${{ secrets.SEED_PASSWORD_ALICE }}
+      SEED_PASSWORD_BOB: ${{ secrets.SEED_PASSWORD_BOB }}
+      SEED_PASSWORD_CAROL: ${{ secrets.SEED_PASSWORD_CAROL }}
+      SEED_PASSWORD_DAVE: ${{ secrets.SEED_PASSWORD_DAVE }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: make up

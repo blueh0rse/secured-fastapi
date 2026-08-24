@@ -1,11 +1,15 @@
 services:
   db:
     image: postgres:13
-    env_file: .env
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+      SEED_PASSWORD_ADMIN: ${SEED_PASSWORD_ADMIN}
+      SEED_PASSWORD_ALICE: ${SEED_PASSWORD_ALICE}
+      SEED_PASSWORD_BOB: ${SEED_PASSWORD_BOB}
+      SEED_PASSWORD_CAROL: ${SEED_PASSWORD_CAROL}
+      SEED_PASSWORD_DAVE: ${SEED_PASSWORD_DAVE}
     ports:
       - "5432:5432"
     volumes:
