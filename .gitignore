@@ -6,3 +6,6 @@ htmlcov/
 private/
 .venv/
 venv/
+.env
+build/
+*.egg-info/

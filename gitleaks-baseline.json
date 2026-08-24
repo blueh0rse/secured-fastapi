@@ -1,0 +1,23 @@
+[
+ {
+  "RuleID": "generic-api-key",
+  "Description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+  "StartLine": 10,
+  "EndLine": 10,
+  "StartColumn": 2,
+  "EndColumn": 84,
+  "Match": "JWT_SECRET_KEY = \"REDACTED\"",
+  "Secret": "REDACTED",
+  "File": "app/config.py",
+  "SymlinkFile": "",
+  "Commit": "0f13dc303003bd0c30b7c674fb265c69ff48f4f2",
+  "Link": "https://github.com/blueh0rse/secured-fastapi/blob/0f13dc303003bd0c30b7c674fb265c69ff48f4f2/app/config.py#L10",
+  "Entropy": 3.8321083,
+  "Author": "blueh0rse",
+  "Email": "110935049+blueh0rse@users.noreply.github.com",
+  "Date": "2026-08-16T12:48:17Z",
+  "Message": "release v1.0.0",
+  "Tags": [],
+  "Fingerprint": "0f13dc303003bd0c30b7c674fb265c69ff48f4f2:app/config.py:generic-api-key:10"
+ }
+]

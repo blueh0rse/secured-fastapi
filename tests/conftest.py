@@ -1,6 +1,7 @@
 """Shared fixtures for the test suite."""
 
 import hashlib
+import os
 from typing import AsyncIterator
 
 import psycopg2
@@ -8,15 +9,21 @@ import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 
-from app.config import DATABASE_URL
+from app.config import DB_URL
 from app.main import app
 
+ADMIN_PASS = os.environ.get("SEED_PASSWORD_ADMIN", "NO_VALUE")
+ALICE_PASS = os.environ.get("SEED_PASSWORD_ALICE", "NO_VALUE")
+BOB_PASS = os.environ.get("SEED_PASSWORD_BOB", "NO_VALUE")
+CAROL_PASS = os.environ.get("SEED_PASSWORD_CAROL", "NO_VALUE")
+DAVE_PASS = os.environ.get("SEED_PASSWORD_DAVE", "NO_VALUE")
+
 SEED_PASSWORDS = {
-    "admin": "Qz7$mVb2LpXt9#eRk4WnD8yA",
-    "alice": "Jf3&nRt8QmZx5#WpL2vBk9eS",
-    "bob": "Xr9%QwPt4mNl7$YbK2vDe6Zs",
-    "carol": "Wm5#LqTx8nRp3$VbYk6eDz9J",
-    "dave": "Nt2$KqXm9LpRw4#VbYs7eDj6",
+    "admin": ADMIN_PASS,
+    "alice": ALICE_PASS,
+    "bob": BOB_PASS,
+    "carol": CAROL_PASS,
+    "dave": DAVE_PASS,
 }
 
 
@@ -28,7 +35,7 @@ def _hash(password: str) -> str:
 @pytest.fixture(autouse=True)
 def db() -> None:
     """Reset the users and audit_logs tables to a known state before each test."""
-    conn = psycopg2.connect(DATABASE_URL)
+    conn = psycopg2.connect(DB_URL)
     try:
         with conn.cursor() as cur:
             cur.execute("TRUNCATE audit_logs, users RESTART IDENTITY CASCADE")

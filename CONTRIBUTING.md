@@ -12,7 +12,7 @@ app/
 └── routers/
     └── users.py        # all endpoints
 db/
-└── init.sql            # schema and seed data
+└── init.sh             # schema and seed data
 tests/                  # test suite
 ```
 
@@ -20,9 +20,14 @@ tests/                  # test suite
 
 ```sh
 uv venv --python 3.9
-uv pip install -r requirements.txt
+uv pip install .
+make install-hooks
 docker compose up -d db
 ```
+
+`make install-hooks` installs the pre-commit hooks (secret scanning and basic
+file checks) so they run on every commit. CI enforces the same checks, so
+this step is advisory locally, not a merge gate.
 
 ## Running the tests
 
@@ -44,4 +49,5 @@ make db         # start the database only
 make down       # stop the stack
 make tests      # run the test suite
 make lint       # run the linter
+make install-hooks  # install pre-commit hooks
 ```
