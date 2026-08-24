@@ -3,9 +3,10 @@ FROM python:3.9-alpine3.15
 WORKDIR /app
 
 RUN apk add --update gcc musl-dev postgresql-dev libffi-dev
+RUN pip install --no-cache-dir uv
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml .
+RUN uv pip install --system --no-cache .
 
 COPY app app
 COPY db db
