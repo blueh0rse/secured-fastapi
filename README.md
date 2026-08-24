@@ -4,6 +4,8 @@ A small internal service for managing user accounts, built with FastAPI and
 PostgreSQL. It provides token-based login, a role-based users API, and a
 per-user audit log.
 
+<img alt="gitleaks badge" src="https://img.shields.io/badge/protected%20by-gitleaks-blue">
+
 ## Features
 
 - JWT-based authentication
@@ -31,15 +33,17 @@ docker compose up
 ```
 
 This starts the API on `http://localhost:8000` and a PostgreSQL database
-seeded with a few accounts for local development:
+seeded with a few accounts for local development. Copy `.env.example` to
+`.env` and set your own `SEED_PASSWORD_*` values first — those become the
+accounts' passwords:
 
-| username | password | role |
-| --- | --- | --- |
-| `admin` | `Qz7$mVb2LpXt9#eRk4WnD8yA` | admin |
-| `alice` | `Jf3&nRt8QmZx5#WpL2vBk9eS` | user |
-| `bob` | `Xr9%QwPt4mNl7$YbK2vDe6Zs` | user |
-| `carol` | `Wm5#LqTx8nRp3$VbYk6eDz9J` | user (inactive) |
-| `dave` | `Nt2$KqXm9LpRw4#VbYs7eDj6` | admin |
+| username | role |
+| --- | --- |
+| `admin` | admin |
+| `alice` | user |
+| `bob` | user |
+| `carol` | user (inactive) |
+| `dave` | admin |
 
 Once the stack is running, open `http://localhost:8000/docs` for interactive
 API documentation.
