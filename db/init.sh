@@ -1,6 +1,16 @@
--- Schema and seed data for the users service.
--- Executed automatically by the postgres image entrypoint on first start.
+#!/bin/sh
+# Schema and seed data for the users service.
+# Executed automatically by the postgres image entrypoint on first start.
+set -eu
 
+psql -v ON_ERROR_STOP=1 \
+     --username "$POSTGRES_USER" \
+     --dbname "$POSTGRES_DB" \
+     -v seed_pw_admin="$SEED_PASSWORD_ADMIN" \
+     -v seed_pw_alice="$SEED_PASSWORD_ALICE" \
+     -v seed_pw_bob="$SEED_PASSWORD_BOB" \
+     -v seed_pw_carol="$SEED_PASSWORD_CAROL" \
+     -v seed_pw_dave="$SEED_PASSWORD_DAVE" <<'EOSQL'
 CREATE TABLE users (
     id              SERIAL PRIMARY KEY,
     username        VARCHAR(50)  UNIQUE NOT NULL,
@@ -20,14 +30,14 @@ CREATE TABLE audit_logs (
 );
 
 -- Seed accounts used for local development and the test suite.
--- Passwords are hashed with MD5 below; the plaintext values live in
--- docker-compose.yml and tests/conftest.py.
+-- Plaintext passwords are supplied via SEED_PASSWORD_* environment
+-- variables (see .env.example) and hashed here with MD5 at init time.
 INSERT INTO users (username, email, hashed_password, role, is_active) VALUES
-    ('admin', 'admin@example.com', 'd746e6a75d583c259678b8c6915c6112', 'admin', TRUE),
-    ('alice', 'alice@example.com', '5518012b4067eb6714aa4820fd4780ec', 'user',  TRUE),
-    ('bob',   'bob@example.com',   '30831a97f2be7b6cd073b71944c45b4d', 'user',  TRUE),
-    ('carol', 'carol@example.com', 'fe962b20904154c2bf2b20ca95bfd68b', 'user',  FALSE),
-    ('dave',  'dave@example.com',  'c45620638e5ff5e6020eb9c66a7edd34', 'admin', TRUE);
+    ('admin', 'admin@example.com', md5(:'seed_pw_admin'), 'admin', TRUE),
+    ('alice', 'alice@example.com', md5(:'seed_pw_alice'), 'user',  TRUE),
+    ('bob',   'bob@example.com',   md5(:'seed_pw_bob'),   'user',  TRUE),
+    ('carol', 'carol@example.com', md5(:'seed_pw_carol'), 'user',  FALSE),
+    ('dave',  'dave@example.com',  md5(:'seed_pw_dave'),  'admin', TRUE);
 
 INSERT INTO audit_logs (user_id, action, ip_address) VALUES
     (1, 'login',           '10.0.0.11'),
@@ -40,3 +50,4 @@ INSERT INTO audit_logs (user_id, action, ip_address) VALUES
     (4, 'login',           '10.0.0.42'),
     (5, 'login',           '10.0.0.53'),
     (5, 'user_created',    '10.0.0.53');
+EOSQL

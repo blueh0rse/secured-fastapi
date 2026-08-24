@@ -2,10 +2,10 @@
 
 import os
 
-DATABASE_URL = os.environ.get(
-    "DATABASE_URL",
-    "postgresql://app_service:Tr0ub4dor&3xQmS9pLk2vN7e@localhost:5432/usersdb",
-)
+from dotenv import load_dotenv
 
-JWT_SECRET_KEY = "6a54d56076a28b73d7baa493cf2ff292430a60f0fa81b678a50e63b6b5f1e3a4"
-JWT_ALGORITHM = "HS256"
+load_dotenv()
+
+DB_URL = os.environ.get("DB_URL", "NO_VALUE")
+JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "NO_VALUE")
+JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM", "NO_VALUE")
