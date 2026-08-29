@@ -23,13 +23,15 @@ jobs:
 
   vuln-scan:
     runs-on: ubuntu-24.04
+    needs: secret-scan
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
           ignore-unfixed: true
-          severity: 'CRITICAL'
+          severity: 'CRITICAL,HIGH'
           format: 'sarif'
           output: 'trivy-code-results.sarif'
       - uses: github/codeql-action/upload-sarif@v4
@@ -38,6 +40,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-24.04
+    needs: vuln-scan
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -96,3 +99,23 @@ jobs:
             echo "Waiting for the application to be ready..."
             sleep 5
           done
+
+  build-scan:
+    runs-on: ubuntu-24.04
+    needs: build
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: docker build -t secured-api:${{ github.sha }} .
+      - uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'secured-api:${{ github.sha }}'
+          format: 'sarif'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          output: 'trivy-build-results.sarif'
+      - uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'trivy-build-results.sarif'
