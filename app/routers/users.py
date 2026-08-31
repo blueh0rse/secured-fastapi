@@ -17,6 +17,10 @@ from app.models import (
 
 router = APIRouter()
 
+SORTABLE_COLUMNS = frozenset(
+    {"id", "username", "email", "role", "is_active", "created_at"}
+)
+
 
 @router.post(
     "/auth/login",
@@ -30,11 +34,11 @@ def login(payload: LoginRequest) -> TokenResponse:
     conn = get_connection()
     try:
         with conn.cursor() as cur:
-            query = (
+            cur.execute(
                 "SELECT hashed_password, role, is_active FROM users "
-                f"WHERE username = '{payload.username}'"
+                "WHERE username = %s",
+                (payload.username,),
             )
-            cur.execute(query)
             row = cur.fetchone()
     finally:
         conn.close()
@@ -71,15 +75,22 @@ def list_users(
         "SELECT id, username, email, hashed_password, role, is_active, created_at "
         "FROM users WHERE 1=1"
     )
+    params: List[object] = []
     if search:
-        query += f" AND username ILIKE '%{search}%'"
+        query += " AND username ILIKE %s"
+        params.append(f"%{search}%")
     if sort:
+        if sort not in SORTABLE_COLUMNS:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail="Invalid sort column",
+            )
         query += f" ORDER BY {sort}"
 
     conn = get_connection()
     try:
         with conn.cursor() as cur:
-            cur.execute(query)
+            cur.execute(query, params)
             rows = cur.fetchall()
     finally:
         conn.close()
