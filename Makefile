@@ -80,7 +80,7 @@ up-prebuilt:
 
 SEMGREP       = docker run --rm -u $$(id -u):$$(id -g) -e HOME=/tmp \
                 -v $$(pwd):/src -w /src semgrep/semgrep:1.175.0 semgrep
-SEMGREP_RULES = --config=p/python --config=p/security-audit
+SEMGREP_RULES = --config=p/python --config=p/security-audit --config=p/jwt
 # Semgrep grades findings INFO / WARNING / ERROR. Medium or higher is the
 # WARNING and ERROR pair.
 SEMGREP_MED   = --severity=WARNING --severity=ERROR
