@@ -248,8 +248,9 @@ def update_user(
     conn = get_connection()
     try:
         with conn.cursor() as cur:
+            assignments = ", ".join(fields)
             cur.execute(
-                f"UPDATE users SET {', '.join(fields)} WHERE id = %s "
+                f"UPDATE users SET {assignments} WHERE id = %s "  # nosec B608
                 "RETURNING id, username, email, hashed_password, role, "
                 "is_active, created_at",
                 values,
