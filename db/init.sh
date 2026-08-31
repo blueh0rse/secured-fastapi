@@ -11,6 +11,8 @@ psql -v ON_ERROR_STOP=1 \
      -v seed_pw_bob="$SEED_PASSWORD_BOB" \
      -v seed_pw_carol="$SEED_PASSWORD_CAROL" \
      -v seed_pw_dave="$SEED_PASSWORD_DAVE" <<'EOSQL'
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 CREATE TABLE users (
     id              SERIAL PRIMARY KEY,
     username        VARCHAR(50)  UNIQUE NOT NULL,
@@ -31,13 +33,13 @@ CREATE TABLE audit_logs (
 
 -- Seed accounts used for local development and the test suite.
 -- Plaintext passwords are supplied via SEED_PASSWORD_* environment
--- variables (see .env.example) and hashed here with MD5 at init time.
+-- variables (see .env.example) and hashed here with bcrypt at init time.
 INSERT INTO users (username, email, hashed_password, role, is_active) VALUES
-    ('admin', 'admin@example.com', md5(:'seed_pw_admin'), 'admin', TRUE),
-    ('alice', 'alice@example.com', md5(:'seed_pw_alice'), 'user',  TRUE),
-    ('bob',   'bob@example.com',   md5(:'seed_pw_bob'),   'user',  TRUE),
-    ('carol', 'carol@example.com', md5(:'seed_pw_carol'), 'user',  FALSE),
-    ('dave',  'dave@example.com',  md5(:'seed_pw_dave'),  'admin', TRUE);
+    ('admin', 'admin@example.com', crypt(:'seed_pw_admin', gen_salt('bf')), 'admin', TRUE),
+    ('alice', 'alice@example.com', crypt(:'seed_pw_alice', gen_salt('bf')), 'user',  TRUE),
+    ('bob',   'bob@example.com',   crypt(:'seed_pw_bob', gen_salt('bf')),   'user',  TRUE),
+    ('carol', 'carol@example.com', crypt(:'seed_pw_carol', gen_salt('bf')), 'user',  FALSE),
+    ('dave',  'dave@example.com',  crypt(:'seed_pw_dave', gen_salt('bf')),  'admin', TRUE);
 
 INSERT INTO audit_logs (user_id, action, ip_address) VALUES
     (1, 'login',           '10.0.0.11'),

@@ -1,6 +1,5 @@
 """Shared fixtures for the test suite."""
 
-import hashlib
 import os
 from typing import AsyncIterator
 
@@ -9,6 +8,7 @@ import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 
+from app.auth import hash_password
 from app.config import DB_URL
 from app.main import app
 
@@ -27,9 +27,7 @@ SEED_PASSWORDS = {
 }
 
 
-def _hash(password: str) -> str:
-    """Hash a plaintext password the same way the app does."""
-    return hashlib.md5(password.encode()).hexdigest()
+SEED_HASHES = {name: hash_password(pw) for name, pw in SEED_PASSWORDS.items()}
 
 
 @pytest.fixture(autouse=True)
@@ -45,7 +43,7 @@ def db() -> None:
                 (
                     "admin",
                     "admin@example.com",
-                    _hash(SEED_PASSWORDS["admin"]),
+                    SEED_HASHES["admin"],
                     "admin",
                     True,
                 ),
@@ -56,7 +54,7 @@ def db() -> None:
                 (
                     "alice",
                     "alice@example.com",
-                    _hash(SEED_PASSWORDS["alice"]),
+                    SEED_HASHES["alice"],
                     "user",
                     True,
                 ),
@@ -64,7 +62,7 @@ def db() -> None:
             cur.execute(
                 "INSERT INTO users (username, email, hashed_password, role, is_active) "
                 "VALUES (%s, %s, %s, %s, %s)",
-                ("bob", "bob@example.com", _hash(SEED_PASSWORDS["bob"]), "user", True),
+                ("bob", "bob@example.com", SEED_HASHES["bob"], "user", True),
             )
             cur.execute(
                 "INSERT INTO users (username, email, hashed_password, role, is_active) "
@@ -72,7 +70,7 @@ def db() -> None:
                 (
                     "carol",
                     "carol@example.com",
-                    _hash(SEED_PASSWORDS["carol"]),
+                    SEED_HASHES["carol"],
                     "user",
                     False,
                 ),
@@ -83,7 +81,7 @@ def db() -> None:
                 (
                     "dave",
                     "dave@example.com",
-                    _hash(SEED_PASSWORDS["dave"]),
+                    SEED_HASHES["dave"],
                     "admin",
                     True,
                 ),

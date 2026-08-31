@@ -4,7 +4,13 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.auth import CurrentUser, create_access_token, get_current_user, hash_password
+from app.auth import (
+    CurrentUser,
+    create_access_token,
+    get_current_user,
+    hash_password,
+    verify_password,
+)
 from app.db import get_connection
 from app.models import (
     AuditLogOut,
@@ -49,7 +55,7 @@ def login(payload: LoginRequest) -> TokenResponse:
         )
 
     hashed_password, role, is_active = row
-    if hash_password(payload.password) != hashed_password or not is_active:
+    if not verify_password(payload.password, hashed_password) or not is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
         )

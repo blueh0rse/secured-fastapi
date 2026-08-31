@@ -1,8 +1,8 @@
 """Password hashing, token issuance, and the current-user dependency."""
 
-import hashlib
 from typing import NamedTuple
 
+import bcrypt
 import jwt
 from fastapi import HTTPException, Request, status
 
@@ -12,7 +12,15 @@ from app.db import get_connection
 
 def hash_password(password: str) -> str:
     """Hash a plaintext password for storage."""
-    return hashlib.md5(password.encode()).hexdigest()
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+
+def verify_password(password: str, hashed: str) -> bool:
+    """Check a plaintext password against a stored hash."""
+    try:
+        return bcrypt.checkpw(password.encode(), hashed.encode())
+    except ValueError:
+        return False
 
 
 def create_access_token(username: str, role: str) -> str:
