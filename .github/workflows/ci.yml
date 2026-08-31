@@ -95,6 +95,37 @@ jobs:
           sarif_file: 'trivy-db-results.sarif'
           category: 'trivy-db-image'
 
+  sast-bandit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: PyCQA/bandit-action@67a458d90fa11fb1463e91e7f4c8f068b5863c7f # v1.0.1
+      - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Gate on MEDIUM findings or higher
+        run: make bandit-gate
+
+  sast-semgrep:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: make semgrep-sarif
+      - name: Upload Semgrep findings
+        if: always() && hashFiles('semgrep-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          sarif_file: 'semgrep-results.sarif'
+          category: 'semgrep'
+      - name: Gate on MEDIUM findings or higher
+        run: make semgrep-gate
+
   lint:
     runs-on: ubuntu-24.04
     needs: [secret-scan, vuln-scan]
