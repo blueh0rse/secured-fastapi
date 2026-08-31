@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class LoginRequest(BaseModel):
@@ -25,7 +25,7 @@ class UserCreate(BaseModel):
 
     username: str
     email: str
-    password: str
+    password: str = Field(max_length=72)
     role: str = "user"
 
 
@@ -33,7 +33,7 @@ class UserUpdate(BaseModel):
     """Fields accepted when updating an existing user."""
 
     email: Optional[str] = None
-    password: Optional[str] = None
+    password: Optional[str] = Field(default=None, max_length=72)
     role: Optional[str] = None
     is_active: Optional[bool] = None
 

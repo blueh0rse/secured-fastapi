@@ -10,3 +10,20 @@ repos:
       - id: check-added-large-files
       - id: end-of-file-fixer
       - id: detect-private-key
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.9.4
+    hooks:
+      - id: bandit
+        args: ["-r", "app", "--severity-level", "medium",
+               "--confidence-level", "medium"]
+        pass_filenames: false
+
+  - repo: https://github.com/semgrep/semgrep
+    rev: v1.175.0
+    hooks:
+      - id: semgrep
+        args: ["--config", "p/python", "--config", "p/security-audit",
+               "--config", "p/jwt", "--severity", "WARNING",
+               "--severity", "ERROR", "--error", "--quiet"]
+        pass_filenames: false

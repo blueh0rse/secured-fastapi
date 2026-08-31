@@ -8,6 +8,7 @@ dependencies = [
     "uvloop==0.22.1",
     "psycopg2-binary==2.9.12",
     "PyJWT==2.13.0",
+    "bcrypt==5.0.0",
     "python-dotenv==1.2.3",
 ]
 
@@ -19,6 +20,7 @@ dev = [
     "httpx==0.28.1",
     "flake8==7.3.0",
     "pre-commit==4.6.2",
+    "bandit[sarif]==1.9.4",
 ]
 
 [tool.setuptools.packages.find]
