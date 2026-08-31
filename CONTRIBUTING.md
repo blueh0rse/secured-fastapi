@@ -60,24 +60,37 @@ make vuln-gate        # the merge gate: exits 1 on fixable CRITICAL/HIGH
 make image-report     # application image CVEs
 make image-gate       # the merge gate for the image
 make db-image-report  # database image, reported only
+make bandit-report    # source flaws, everything found
+make bandit-gate      # the merge gate: exits 1 at MEDIUM severity/confidence
+make semgrep-report   # source flaws, everything found
+make semgrep-sarif    # the same scan, written to semgrep-results.sarif
+make semgrep-gate     # the merge gate: exits 1 on WARNING or ERROR
 ```
 
-Run the `-gate` targets before you push. They use the same Trivy version and
+Run the `-gate` targets before you push. They pin the same tool versions and
 flags as CI, so a clean run here means a clean run there.
+
+Bandit and Semgrep also run as pre-commit hooks, with the gate flags. Run
+`make install-hooks` once and they fire on every commit.
 
 Each scan runs twice in CI on purpose. The report step records every finding
 and never fails, so alerts reach code scanning even when the gate blocks the
-build. The gate step then fails on CRITICAL or HIGH findings that have a
-released fix.
+build. The gate step then re-runs the same scan at the blocking threshold:
+
+| Tool | Blocks on |
+| --- | --- |
+| Trivy | CRITICAL or HIGH with a released fix |
+| Bandit | MEDIUM severity and MEDIUM confidence or above |
+| Semgrep | WARNING or ERROR |
 
 The database image is scanned but not gated. Its findings live in a Go binary
 inside the upstream image, which no change here can rebuild.
 
-### Accepting a finding
+### Accepting a CVE
 
 Add it to `.trivyignore`:
 
-```
+```ignore
 # CVE-2026-00000 — <package>
 # Reason: not reachable, the affected code path is never called.
 # Reviewed by: <handle>  Expires: 2026-12-01
@@ -86,3 +99,20 @@ CVE-2026-00000
 
 Every entry needs a reason, a reviewer, and an expiry date. Review the file at
 each release and re-check anything that expired.
+
+### Accepting a source finding
+
+Suppress it at the line, and put the reasoning in the commit message so it
+stays attached to the change that introduced it.
+
+- Bandit: `# nosec B608` on the line Bandit reports. Check its output afterwards
+  — an unused marker is reported as a warning, and a suppression that silences
+  nothing hides the next real finding.
+- Semgrep: `# nosemgrep: <rule-id>` on the line above.
+
+Name the rule in both cases. A bare `# nosec` or `# nosemgrep` disables every
+rule on that line, including ones written after you left.
+
+`app/routers/users.py` carries the only suppression in the repo today: Bandit
+B608 on the `UPDATE` in `update_user`. The assignment fragments are literals
+and every value is bound, so the finding is not exploitable.
