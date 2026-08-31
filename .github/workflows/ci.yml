@@ -167,7 +167,7 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    needs: [lint, test]
+    needs: [lint, test, sast-bandit, sast-semgrep]
     permissions:
       contents: read
       security-events: write
