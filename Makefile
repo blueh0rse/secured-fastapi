@@ -1,6 +1,7 @@
 .PHONY: up down tests lint db install-hooks \
         secret-scan generate-secret-baseline secret-scan-baseline \
-        vuln-report vuln-gate image-build image-report image-gate db-image-report up-prebuilt
+        vuln-report vuln-gate image-build image-report image-gate db-image-report up-prebuilt \
+        bandit-report bandit-gate semgrep-report semgrep-sarif semgrep-gate
 
 # === run ===
 
@@ -74,3 +75,27 @@ db-image-report:
 # Starts the stack without rebuilding, so CI runs the exact image it gated.
 up-prebuilt:
 	docker compose up -d --no-build
+
+# === SAST ===
+
+SEMGREP       = docker run --rm -u $$(id -u):$$(id -g) -e HOME=/tmp \
+                -v $$(pwd):/src -w /src semgrep/semgrep:1.175.0 semgrep
+SEMGREP_RULES = --config=p/python --config=p/security-audit
+# Semgrep grades findings INFO / WARNING / ERROR. Medium or higher is the
+# WARNING and ERROR pair.
+SEMGREP_MED   = --severity=WARNING --severity=ERROR
+
+bandit-report:
+	uv run bandit -r app --exit-zero
+
+bandit-gate:
+	uv run bandit -r app --severity-level medium --confidence-level medium
+
+semgrep-report:
+	$(SEMGREP) $(SEMGREP_RULES) .
+
+semgrep-sarif:
+	$(SEMGREP) $(SEMGREP_RULES) --sarif --sarif-output=semgrep-results.sarif .
+
+semgrep-gate:
+	$(SEMGREP) $(SEMGREP_RULES) $(SEMGREP_MED) --error .
