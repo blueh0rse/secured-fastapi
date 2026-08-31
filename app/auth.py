@@ -22,8 +22,8 @@ def create_access_token(username: str, role: str) -> str:
 
 
 def decode_access_token(token: str) -> dict:
-    """Decode an access token and return its claims."""
-    return jwt.decode(token, options={"verify_signature": False})
+    """Verify an access token's signature and return its claims."""
+    return jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
 
 
 class CurrentUser(NamedTuple):
