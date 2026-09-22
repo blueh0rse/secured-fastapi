@@ -4,6 +4,7 @@ ARG PYTHON_IMAGE=python@sha256:540c7d91f98ff6880174c40e99067bf5941eb54d818a7a5e0
 
 # --- build stage -------------------------------------------------------------
 # pip and uv live here only. Neither reaches the runtime image.
+#checkov:skip=CKV_DOCKER_7:image pinned by digest, better than tag
 FROM ${PYTHON_IMAGE} AS builder
 
 RUN pip install --no-cache-dir uv==0.12.7
@@ -23,6 +24,7 @@ RUN uv export --frozen --no-dev --no-emit-project \
         --only-binary=:all: -r /tmp/requirements.txt
 
 # --- runtime stage -----------------------------------------------------------
+#checkov:skip=CKV_DOCKER_7:image pinned by digest, better than tag
 FROM ${PYTHON_IMAGE}
 
 # apk upgrade picks up OS patches published after the base image was built.
