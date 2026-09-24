@@ -4,6 +4,7 @@ ARG PYTHON_IMAGE=python@sha256:540c7d91f98ff6880174c40e99067bf5941eb54d818a7a5e0
 
 # --- build stage -------------------------------------------------------------
 # pip and uv live here only. Neither reaches the runtime image.
+#checkov:skip=CKV_DOCKER_7:image pinned by digest, better than tag
 FROM ${PYTHON_IMAGE} AS builder
 
 RUN pip install --no-cache-dir uv==0.12.7
@@ -23,6 +24,7 @@ RUN uv export --frozen --no-dev --no-emit-project \
         --only-binary=:all: -r /tmp/requirements.txt
 
 # --- runtime stage -----------------------------------------------------------
+#checkov:skip=CKV_DOCKER_7:image pinned by digest, better than tag
 FROM ${PYTHON_IMAGE}
 
 # apk upgrade picks up OS patches published after the base image was built.
@@ -56,3 +58,6 @@ USER appuser
 EXPOSE 8000
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)"]

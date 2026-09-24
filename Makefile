@@ -1,7 +1,8 @@
 .PHONY: up down tests lint db install-hooks \
         secret-scan generate-secret-baseline secret-scan-baseline \
         vuln-report vuln-gate image-build image-report image-gate db-image-report up-prebuilt \
-        bandit-report bandit-gate semgrep-report semgrep-sarif semgrep-gate
+        bandit-report bandit-gate semgrep-report semgrep-sarif semgrep-gate \
+        checkov-report checkov-gate
 
 # === run ===
 
@@ -99,3 +100,15 @@ semgrep-sarif:
 
 semgrep-gate:
 	$(SEMGREP) $(SEMGREP_RULES) $(SEMGREP_MED) --error .
+
+# === IaC ===
+
+# Keep the version equal to the one the CI checkov-action runs.
+CHECKOV = docker run --rm -u $$(id -u):$$(id -g) -e HOME=/tmp \
+          -v $$(pwd):/src -w /src bridgecrew/checkov:3.3.16
+
+checkov-report:
+	$(CHECKOV) -d . --soft-fail
+
+checkov-gate:
+	$(CHECKOV) -d .
