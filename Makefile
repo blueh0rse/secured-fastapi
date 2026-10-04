@@ -105,7 +105,7 @@ semgrep-gate:
 
 # Keep the version equal to the one the CI checkov-action runs.
 CHECKOV = docker run --rm -u $$(id -u):$$(id -g) -e HOME=/tmp \
-          -v $$(pwd):/src -w /src bridgecrew/checkov:3.3.16
+          -v $$(pwd):/src -w /src ghcr.io/bridgecrewio/checkov:3.3.22
 
 checkov-report:
 	$(CHECKOV) -d . --soft-fail
