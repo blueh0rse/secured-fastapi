@@ -137,7 +137,7 @@ jobs:
       - name: Checkov GitHub Action
         uses: bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf # v12.1347.0
         with:
-          output_file_path: checkov-results.sarif
+          output_format: sarif
       - name: Upload Checkov findings
         if: always() && hashFiles('checkov-results.sarif') != ''
         uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
