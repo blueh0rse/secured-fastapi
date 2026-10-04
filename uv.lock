@@ -636,11 +636,11 @@ wheels = [
 
 [[package]]
 name = "pyjwt"
-version = "2.13.0"
+version = "2.14.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/3b/81/58d0ac84e1ef3a3843791d6954d94c0b33d526c75eeb1efbce9d0a4c4077/pyjwt-2.13.0.tar.gz", hash = "sha256:41571c89ca91598c79e8ef18a2d07367d4810fbbd6f637794879baf1b7703423", size = 107515 }
+sdist = { url = "https://files.pythonhosted.org/packages/af/c3/8a3b59c25070cc61dc517fbdfa5dc0904670c96f605cc69759dc09166b99/pyjwt-2.14.0.tar.gz", hash = "sha256:77283c83fb56ecf566a886c757a714bc83668e38156de2cce8263302f42e0b86", size = 113177 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a3/5e/ecf12fdb62546d64385c158514e9b2b671f7832108ef2ecd2020ce0af2d1/pyjwt-2.13.0-py3-none-any.whl", hash = "sha256:66adcc2aff09b3f1bbd95fc1e1577df8ac8723c978552fd43304c8a290ac5728", size = 31274 },
+    { url = "https://files.pythonhosted.org/packages/9c/97/672cb32ce0dfea44b740cb7b4f97038463b9cf7c0ead1aacf595572851d6/pyjwt-2.14.0-py3-none-any.whl", hash = "sha256:ad0cef71c756a56e74863c2919cf0985f72decbcfcb550ee2f422e7c62b5eedc", size = 32896 },
 ]
 
 [[package]]
@@ -798,7 +798,7 @@ requires-dist = [
     { name = "bcrypt", specifier = "==5.0.0" },
     { name = "fastapi", specifier = "==0.141.1" },
     { name = "psycopg2-binary", specifier = "==2.9.12" },
-    { name = "pyjwt", specifier = "==2.13.0" },
+    { name = "pyjwt", specifier = "==2.14.0" },
     { name = "python-dotenv", specifier = "==1.2.3" },
     { name = "uvicorn", extras = ["standard"], specifier = "==0.52.4" },
     { name = "uvloop", specifier = "==0.22.1" },
@@ -917,17 +917,18 @@ wheels = [
 
 [[package]]
 name = "virtualenv"
-version = "21.7.7"
+version = "21.14.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "distlib" },
     { name = "filelock" },
+    { name = "packaging" },
     { name = "platformdirs" },
     { name = "python-discovery" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/79/41/c3f34799487924f2a6f43b8a8b7acd345a6c61aac2211d4bced8621ca4f1/virtualenv-21.7.7.tar.gz", hash = "sha256:6874376f99ba6b8d4e3ee8bde67f9285412400c7d5b29ba41ee6daa5e0221bdc", size = 5347022 }
+sdist = { url = "https://files.pythonhosted.org/packages/c4/f9/f323b3b6058cff3853b31cf6a49c0425ed797bf9611572ec10d065e08bac/virtualenv-21.14.5.tar.gz", hash = "sha256:c4cb6c13e46b57225a999c7e22a09b163393878facc7ac4c059a57f46faa1647", size = 5467127 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/95/f8/dcec8dc767b812193316c7debed1e2b53e586e59c267bfe517688ff90275/virtualenv-21.7.7-py3-none-any.whl", hash = "sha256:67a6a68fef3ad8ca16b8b89f33fd8f97996cc0bf0db31629d07ecf8dec539a2c", size = 5324620 },
+    { url = "https://files.pythonhosted.org/packages/df/93/084f10ebbecdedf7902ed68fbecc903f0e9c5742155bfffb05eccbc071da/virtualenv-21.14.5-py3-none-any.whl", hash = "sha256:b0651e0174982bba17cc6f0aaa2ef496730cb85a3f35eb5d1119d1c904f7d1da", size = 5487482 },
 ]
 
 [[package]]
